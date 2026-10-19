@@ -16,17 +16,6 @@
 </p>
 
 <p align="center">
-  <code>static-hosting</code> &bull;
-  <code>web-server</code> &bull;
-  <code>self-hosted</code> &bull;
-  <code>deployment</code> &bull;
-  <code>subpath-routing</code> &bull;
-  <code>micro-hosting</code> &bull;
-  <code>rust-server</code> &bull;
-  <code>zero-config</code>
-</p>
-
-<p align="center">
   <img src="./assets/dashboard.png" alt="Zploy Web Dashboard" width="900" style="border-radius: 12px; box-shadow: 0 16px 36px rgba(0,0,0,0.4);">
 </p>
 
