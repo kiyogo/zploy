@@ -40,4 +40,4 @@ jobs:
       - name: Run Tests
         env:
           DATABASE_URL: mysql://root:rootpassword@127.0.0.1:3306/zploy
-        run: cargo test --verbose
+        run: cargo test --verbose -- --test-threads=1
