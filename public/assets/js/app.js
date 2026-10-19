@@ -57,6 +57,12 @@ async function apiFetch(url, options = {}) {
     options.headers = options.headers || {};
     options.credentials = 'include';
 
+    // Dual authentication: attach Bearer token if stored
+    const token = localStorage.getItem('zploy_token');
+    if (token) {
+        options.headers['Authorization'] = `Bearer ${token}`;
+    }
+
     // CSRF Header protection on state-modifying requests
     const method = (options.method || 'GET').toUpperCase();
     if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
@@ -73,6 +79,11 @@ async function apiFetch(url, options = {}) {
     }
 
     if (!res.ok) {
+        if (res.status === 401 && !url.includes('/api/auth/me')) {
+            localStorage.removeItem('zploy_token');
+            currentUser = null;
+            renderAuthArea();
+        }
         const errorMsg = (data && data.error) || `Server error (${res.status})`;
         throw new Error(errorMsg);
     }
@@ -85,6 +96,9 @@ async function checkAuthStatus() {
         const data = await apiFetch('/api/auth/me');
         isInitialized = data.initialized;
         currentUser = data.user;
+        if (!currentUser) {
+            localStorage.removeItem('zploy_token');
+        }
         renderAuthArea();
 
         if (!isInitialized) {
@@ -151,6 +165,9 @@ async function submitLogin() {
             body: JSON.stringify({ username, password })
         });
 
+        if (res.token) {
+            localStorage.setItem('zploy_token', res.token);
+        }
         currentUser = res.user;
         renderAuthArea();
         closeLoginModal();
@@ -171,14 +188,15 @@ async function submitLogin() {
 async function submitLogout() {
     try {
         await apiFetch('/api/auth/logout', { method: 'POST' });
-        currentUser = null;
-        renderAuthArea();
-        showToast('Signed out', 'info');
-        if (document.getElementById('view-manage').style.display === 'block') {
-            loadSitesList();
-        }
     } catch (err) {
-        showToast(err.message, 'danger');
+        console.error(err);
+    }
+    localStorage.removeItem('zploy_token');
+    currentUser = null;
+    renderAuthArea();
+    showToast('Signed out', 'info');
+    if (document.getElementById('view-manage').style.display === 'block') {
+        loadSitesList();
     }
 }
 
@@ -217,6 +235,9 @@ async function submitSetup() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         });
+        if (loginRes.token) {
+            localStorage.setItem('zploy_token', loginRes.token);
+        }
         currentUser = loginRes.user;
         renderAuthArea();
     } catch (err) {
@@ -539,6 +560,10 @@ function startPublishing() {
     xhr.open('POST', '/api/uploads/quick-publish');
     xhr.setRequestHeader('X-Zploy-CSRF', '1');
     xhr.setRequestHeader('X-MiniHost-CSRF', '1');
+    const token = localStorage.getItem('zploy_token');
+    if (token) {
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    }
     xhr.withCredentials = true;
 
     xhr.upload.onprogress = (e) => {
@@ -569,6 +594,11 @@ function startPublishing() {
                 const errData = JSON.parse(xhr.responseText);
                 errorMsg = errData.error || errorMsg;
             } catch {}
+            if (xhr.status === 401) {
+                localStorage.removeItem('zploy_token');
+                currentUser = null;
+                renderAuthArea();
+            }
             showToast(errorMsg, 'danger');
         }
     };
@@ -576,7 +606,14 @@ function startPublishing() {
     xhr.onerror = () => {
         publishBtn.disabled = false;
         progressContainer.style.display = 'none';
-        showToast('Connection to server lost during upload', 'danger');
+        if (xhr.status === 401) {
+            localStorage.removeItem('zploy_token');
+            currentUser = null;
+            renderAuthArea();
+            showToast('Session has expired. Please sign in again.', 'danger');
+        } else {
+            showToast('Connection to server lost during upload. Please check server status.', 'danger');
+        }
     };
 
     xhr.send(formData);

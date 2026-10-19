@@ -107,6 +107,10 @@ pub async fn login(
 
     let mut headers = HeaderMap::new();
     headers.insert(header::SET_COOKIE, cookie_header.parse().unwrap());
+    headers.append(
+        header::SET_COOKIE,
+        "minihost_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0".parse().unwrap(),
+    );
 
     (
         StatusCode::OK,
@@ -156,6 +160,10 @@ pub async fn logout(
 
     let mut resp_headers = HeaderMap::new();
     resp_headers.insert(header::SET_COOKIE, clear_cookie.parse().unwrap());
+    resp_headers.append(
+        header::SET_COOKIE,
+        "minihost_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0".parse().unwrap(),
+    );
 
     (
         StatusCode::OK,
