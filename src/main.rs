@@ -1,7 +1,8 @@
 use axum::{
-    extract::DefaultBodyLimit,
+    body::Body,
+    extract::{DefaultBodyLimit, State},
     http::{header, StatusCode},
-    response::{Html, IntoResponse},
+    response::{Html, IntoResponse, Response},
     routing::get,
     Router,
 };
@@ -16,6 +17,7 @@ use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use zploy::api::create_api_router;
+use zploy::auth::OptionalAuthUser;
 use zploy::config::Config;
 use zploy::database::init_db;
 use zploy::hosting::{serve_hosted_request, AppState};
@@ -99,23 +101,70 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn serve_admin_page() -> impl IntoResponse {
-    let admin_path = std::path::Path::new("public/admin.html");
-    if admin_path.exists() {
-        match std::fs::read_to_string(admin_path) {
-            Ok(content) => Html(content).into_response(),
-            Err(_) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Failed to read admin interface",
+async fn serve_admin_page(
+    State(_state): State<AppState>,
+    OptionalAuthUser(maybe_user): OptionalAuthUser,
+    uri: axum::http::Uri,
+) -> Response<Body> {
+    let clean_path = uri.path().trim_matches('/');
+    let is_login_route = clean_path == "admin/login" || clean_path.starts_with("admin/login/");
+
+    if is_login_route {
+        if maybe_user.is_some() {
+            // Already logged in, redirect to /admin dashboard
+            return Response::builder()
+                .status(StatusCode::SEE_OTHER)
+                .header(header::LOCATION, "/admin")
+                .body(Body::empty())
+                .unwrap();
+        }
+
+        let login_path = std::path::Path::new("public/login.html");
+        if login_path.exists() {
+            match std::fs::read_to_string(login_path) {
+                Ok(content) => Html(content).into_response(),
+                Err(_) => (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Failed to read login interface",
+                )
+                    .into_response(),
+            }
+        } else {
+            (
+                StatusCode::NOT_FOUND,
+                "Login interface file public/login.html not found",
             )
-                .into_response(),
+                .into_response()
         }
     } else {
-        (
-            StatusCode::NOT_FOUND,
-            "Admin interface file public/admin.html not found",
-        )
-            .into_response()
+        // Any /admin or /admin/* route
+        if maybe_user.is_none() {
+            // Not authenticated, redirect to /admin/login
+            return Response::builder()
+                .status(StatusCode::SEE_OTHER)
+                .header(header::LOCATION, "/admin/login")
+                .body(Body::empty())
+                .unwrap();
+        }
+
+        // Authenticated: serve admin dashboard
+        let admin_path = std::path::Path::new("public/admin.html");
+        if admin_path.exists() {
+            match std::fs::read_to_string(admin_path) {
+                Ok(content) => Html(content).into_response(),
+                Err(_) => (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Failed to read admin interface",
+                )
+                    .into_response(),
+            }
+        } else {
+            (
+                StatusCode::NOT_FOUND,
+                "Admin interface file public/admin.html not found",
+            )
+                .into_response()
+        }
     }
 }
 

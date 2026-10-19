@@ -33,9 +33,14 @@ pub async fn serve_hosted_request(
 
     // Check system reserved paths
     if clean_path == "admin" || clean_path.starts_with("admin/") {
+        let loc = if clean_path == "admin/login" || clean_path.starts_with("admin/login/") {
+            "/admin/login"
+        } else {
+            "/admin"
+        };
         return Response::builder()
             .status(StatusCode::SEE_OTHER)
-            .header(header::LOCATION, "/admin")
+            .header(header::LOCATION, loc)
             .body(Body::empty())
             .unwrap();
     }
@@ -328,63 +333,20 @@ fn empty_root_response() -> Response<Body> {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zploy Server</title>
+    <title></title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+        html, body {
             margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 480px;
-            text-align: center;
-            background: #1e293b;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-            border: 1px solid #334155;
-        }
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 12px 0;
-            color: #38bdf8;
-        }
-        p {
-            font-size: 15px;
-            color: #94a3b8;
-            line-height: 1.6;
-            margin: 0 0 28px 0;
-        }
-        a {
-            display: inline-block;
-            background: #0284c7;
-            color: #ffffff;
-            padding: 12px 28px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-        a:hover {
-            background: #0369a1;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            background: #ffffff;
+            overflow: hidden;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Zploy Server</h1>
-        <p>No website has been published at the root path (/).<br>Administrator, please visit the Admin Dashboard to publish a site.</p>
-        <a href="/admin">Go to Admin Dashboard (/admin)</a>
-    </div>
-</body>
+<body></body>
 </html>"#;
 
     Response::builder()
@@ -434,21 +396,7 @@ fn not_found_response(message: &str) -> Response<Body> {
             font-size: 16px;
             color: #86868b;
             line-height: 1.5;
-            margin: 0 0 24px 0;
-        }}
-        a {{
-            display: inline-block;
-            background: #0071e3;
-            color: #ffffff;
-            padding: 10px 22px;
-            border-radius: 980px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background 0.2s;
-        }}
-        a:hover {{
-            background: #0077ed;
+            margin: 0;
         }}
     </style>
 </head>
@@ -456,7 +404,6 @@ fn not_found_response(message: &str) -> Response<Body> {
     <div class="container">
         <h1>404</h1>
         <p>{}</p>
-        <a href="/admin">Return to Admin Dashboard</a>
     </div>
 </body>
 </html>"#,

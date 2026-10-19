@@ -82,7 +82,8 @@ async function apiFetch(url, options = {}) {
         if (res.status === 401 && !url.includes('/api/auth/me')) {
             localStorage.removeItem('zploy_token');
             currentUser = null;
-            renderAuthArea();
+            window.location.href = '/admin/login';
+            return;
         }
         const errorMsg = (data && data.error) || `Server error (${res.status})`;
         throw new Error(errorMsg);
@@ -98,14 +99,18 @@ async function checkAuthStatus() {
         currentUser = data.user;
         if (!currentUser) {
             localStorage.removeItem('zploy_token');
+            window.location.href = '/admin/login';
+            return;
         }
         renderAuthArea();
 
         if (!isInitialized) {
-            openSetupModal();
+            window.location.href = '/admin/login';
+            return;
         }
     } catch (err) {
         console.error('Auth check error:', err);
+        window.location.href = '/admin/login';
     }
 }
 
@@ -134,13 +139,12 @@ function renderAuthArea() {
 }
 
 function openLoginModal() {
-    document.getElementById('login-error-msg').style.display = 'none';
-    document.getElementById('login-modal').classList.add('active');
-    document.getElementById('login-username').focus();
+    window.location.href = '/admin/login';
 }
 
 function closeLoginModal() {
-    document.getElementById('login-modal').classList.remove('active');
+    const modal = document.getElementById('login-modal');
+    if (modal) modal.classList.remove('active');
 }
 
 async function submitLogin() {
@@ -193,11 +197,7 @@ async function submitLogout() {
     }
     localStorage.removeItem('zploy_token');
     currentUser = null;
-    renderAuthArea();
-    showToast('Signed out', 'info');
-    if (document.getElementById('view-manage').style.display === 'block') {
-        loadSitesList();
-    }
+    window.location.href = '/admin/login';
 }
 
 function openSetupModal() {

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — Zploy</title>
+    <meta name="description" content="Sign in to Zploy administration dashboard to deploy and manage static websites.">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230071e3'><path d='M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z'/></svg>">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+        }
+        .login-topbar {
+            width: 100%;
+            max-width: 980px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 36px 32px;
+            margin: auto 0;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .login-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 18px;
+            border-radius: var(--radius-md);
+            background: var(--accent-subtle);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .login-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .login-card form {
+            text-align: left;
+        }
+        .login-error {
+            background: var(--danger-subtle);
+            color: var(--danger);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .login-footer {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            padding: 16px 0;
+            text-align: center;
+        }
+        .login-submit-btn {
+            width: 100%;
+            margin-top: 24px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <!-- Top bar with brand and theme toggle -->
+        <div class="login-topbar">
+            <div class="brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                </svg>
+                <span>Zploy</span>
+            </div>
+            <button class="btn-icon" id="theme-toggle" title="Toggle Light/Dark Mode" onclick="toggleTheme()">
+                <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+                <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2"/>
+                    <path d="M12 20v2"/>
+                    <path d="m4.93 4.93 1.41 1.41"/>
+                    <path d="m17.66 17.66 1.41 1.41"/>
+                    <path d="M2 12h2"/>
+                    <path d="M20 12h2"/>
+                    <path d="m6.34 17.66-1.41 1.41"/>
+                    <path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Centered Login Card -->
+        <div class="login-card">
+            <div class="login-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+            <h1 class="login-title" id="page-title">Sign In to Zploy</h1>
+            <p class="login-desc" id="page-desc">Enter your administrator credentials to access the deployment dashboard.</p>
+
+            <div class="login-error" id="error-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" x2="12" y1="8" y2="12"/>
+                    <line x1="12" x2="12.01" y1="16" y2="16"/>
+                </svg>
+                <span id="error-text">Invalid username or password</span>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+                <div class="form-section" style="margin-top: 0;">
+                    <label class="form-label" for="username-input">Username</label>
+                    <div class="slug-input-wrapper">
+                        <input type="text" id="username-input" class="slug-input" placeholder="admin" autocomplete="username" required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-section" style="margin-top: 16px;">
+                    <label class="form-label" for="password-input" id="password-label">Password</label>
+                    <div class="slug-input-wrapper">
+                        <input type="password" id="password-input" class="slug-input" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary login-submit-btn" id="submit-btn">
+                    <span id="submit-text">Sign In</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            Zploy Server &bull; Blazing Fast Static Web Hosting
+        </div>
+    </div>
+
+    <script>
+        let isSetupMode = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            checkAuth();
+        });
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('zploy_theme') || localStorage.getItem('minihost_theme') || 
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setTheme(savedTheme);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            setTheme(next);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('zploy_theme', theme);
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            if (theme === 'dark') {
+                moonIcon.style.display = 'none';
+                sunIcon.style.display = 'block';
+            } else {
+                moonIcon.style.display = 'block';
+                sunIcon.style.display = 'none';
+            }
+        }
+
+        async function checkAuth() {
+            try {
+                const token = localStorage.getItem('zploy_token');
+                const headers = {};
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const res = await fetch('/api/auth/me', { headers, credentials: 'include' });
+                if (!res.ok) return;
+                const data = await res.json();
+
+                if (data.authenticated) {
+                    // Already authenticated, forward to dashboard
+                    window.location.href = '/admin';
+                    return;
+                }
+
+                if (!data.initialized) {
+                    // First time setup required
+                    isSetupMode = true;
+                    document.getElementById('page-title').textContent = 'Initialize Zploy Admin';
+                    document.getElementById('page-desc').textContent = 'Welcome! Create your primary administrator account to secure the server.';
+                    document.getElementById('password-label').textContent = 'New Password (min 6 characters)';
+                    document.getElementById('username-input').value = 'admin';
+                    document.getElementById('submit-text').textContent = 'Complete Setup & Sign In';
+                }
+            } catch (err) {
+                console.error('Check auth error:', err);
+            }
+        }
+
+        function showError(msg) {
+            const box = document.getElementById('error-box');
+            const text = document.getElementById('error-text');
+            text.textContent = msg;
+            box.style.display = 'flex';
+        }
+
+        function hideError() {
+            document.getElementById('error-box').style.display = 'none';
+        }
+
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username-input').value.trim();
+            const password = document.getElementById('password-input').value;
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+
+            if (isSetupMode && password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            const endpoint = isSetupMode ? '/api/auth/setup' : '/api/auth/login';
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Zploy-CSRF': '1'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || 'Authentication failed');
+                }
+
+                if (data.token) {
+                    localStorage.setItem('zploy_token', data.token);
+                }
+
+                // Redirect to admin dashboard
+                window.location.href = '/admin';
+            } catch (err) {
+                showError(err.message || 'An error occurred during authentication');
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
+        }
+    </script>
+</body>
+</html>
