@@ -1,5 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="100%" height="100%" fill="none">
   <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="zpBg" x1="0%" y1="0%" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+
     <!-- Accent Gradient 1 (Cyan to Blue) -->
     <linearGradient id="cyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#38bdf8"/>
@@ -26,11 +33,15 @@
     </filter>
   </defs>
 
+  <!-- Clean Squircle Container -->
+  <rect width="220" height="220" rx="48" fill="url(#zpBg)"/>
+  <rect x="1" y="1" width="218" height="218" rx="47" stroke="rgba(56, 189, 248, 0.25)" stroke-width="2"/>
+
   <!-- Ambient Glow Behind Logo -->
   <circle cx="110" cy="110" r="70" fill="url(#cyanBlue)" opacity="0.12" />
   <circle cx="130" cy="90" r="50" fill="url(#violetIndigo)" opacity="0.15" />
 
-  <!-- ICON: Geometric Isometric 'Z' Deployment Emblem (Pure vector, zero background box) -->
+  <!-- ICON: Geometric Isometric 'Z' Deployment Emblem -->
   <g transform="translate(40, 20)">
     <!-- Base Layer Polygon -->
     <path d="M 30,30 L 110,30 L 130,58 L 58,130 L 130,130 L 120,154 L 30,154 L 10,126 L 82,54 L 20,54 Z"
