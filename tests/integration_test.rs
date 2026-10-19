@@ -15,7 +15,9 @@ use tower::ServiceExt;
 async fn setup_test_app() -> (axum::Router, AppState, tempfile::TempDir) {
     let dir = tempdir().unwrap();
     let mut config = Config::default();
-    config.database.url = "mysql://root:@127.0.0.1:3306/minihost".to_string();
+    let db_url = std::env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "mysql://root:@127.0.0.1:3306/minihost".to_string());
+    config.database.url = db_url;
     config.storage.sites_dir = dir.path().join("sites");
     config.storage.staging_dir = dir.path().join("staging");
     config.storage.temp_dir = dir.path().join("temp");
