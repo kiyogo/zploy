@@ -1,0 +1,25 @@
+/target
+**/*.rs.bk
+Cargo.lock
+
+# Database & Runtime data
+/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Storage folders
+/storage/sites/*
+!/storage/sites/.gitkeep
+/storage/staging/*
+!/storage/staging/.gitkeep
+/storage/temp/*
+!/storage/temp/.gitkeep
+
+# Environment & local configs
+config/config.toml
+.env
+*.exe
+*.log
+.DS_Store
+Thumbs.db

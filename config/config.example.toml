@@ -1,0 +1,43 @@
+[server]
+host = "0.0.0.0"
+port = 3000
+base_url = "http://localhost:3000"
+trust_proxy = false
+
+[database]
+url = "mysql://root:@127.0.0.1:3306/zploy"
+
+[storage]
+root_dir = "./storage"
+sites_dir = "./storage/sites"
+staging_dir = "./storage/staging"
+temp_dir = "./storage/temp"
+
+[upload]
+max_upload_size_mb = 100
+max_uncompressed_size_mb = 250
+max_file_count = 5000
+max_single_file_size_mb = 50
+allowed_extensions = [
+    "html", "htm", "css", "js", "mjs", "json",
+    "svg", "png", "jpg", "jpeg", "webp", "gif", "ico",
+    "woff", "woff2", "ttf", "eot", "otf",
+    "txt", "xml", "webmanifest", "wasm",
+    "mp3", "mp4", "webm", "ogg", "wav", "pdf", "map"
+]
+
+[auth]
+session_expiry_hours = 72
+cookie_secure = false
+csrf_protection = true
+# Default administrator account if not initialized via web interface
+initial_admin_username = "admin"
+initial_admin_password = ""
+
+[security]
+reserved_slugs = [
+    "api", "assets", "public", "static", "login", "logout",
+    "admin", "health", "system", "setup", "dashboard", "app",
+    "favicon.ico", "robots.txt", "sitemap.xml", "manifest.json"
+]
+enable_spa_fallback = false

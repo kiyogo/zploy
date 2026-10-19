@@ -1,0 +1,74 @@
+[package]
+name = "zploy"
+version = "0.1.0"
+edition = "2021"
+authors = ["KiyoGo <https://github.com/kiyogo>"]
+description = "Blazing fast, ultra lightweight, and secure static web hosting server in Rust"
+homepage = "https://github.com/kiyogo/zploy"
+repository = "https://github.com/kiyogo/zploy"
+license = "MIT"
+keywords = ["web-server", "hosting", "static-site", "deployment", "rust"]
+categories = ["web-programming::http-server"]
+
+[dependencies]
+# Web framework & async runtime
+axum = { version = "0.7", features = ["multipart", "macros"] }
+tokio = { version = "1", features = ["full"] }
+tower = { version = "0.5", features = ["util"] }
+tower-http = { version = "0.6", features = ["cors", "trace", "fs", "compression-gzip", "set-header"] }
+http = "1.1"
+http-body-util = "0.1"
+http-range-header = "0.4"
+
+# Database
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "mysql", "migrate", "macros"] }
+
+# Serialization & Config
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+
+# Utilities & Security
+uuid = { version = "1.10", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+argon2 = "0.5"
+rand = "0.8"
+mime_guess = "2.0"
+zip = { version = "2.2", default-features = false, features = ["deflate"] }
+tempfile = "3.12"
+thiserror = "1.0"
+anyhow = "1.0"
+regex = "1.10"
+sha2 = "0.10"
+walkdir = "2.5"
+hex = "0.4"
+
+[dev-dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["json", "multipart", "rustls-tls"] }
+
+[[test]]
+name = "slug_test"
+path = "tests/slug_test.rs"
+
+[[test]]
+name = "integration_test"
+path = "tests/integration_test.rs"
+
+[[test]]
+name = "security_validation_test"
+path = "tests/security_validation_test.rs"
+
+[profile.dev]
+incremental = false
+codegen-units = 1
+
+[profile.test]
+incremental = false
+codegen-units = 1
+
+[profile.release]
+codegen-units = 1

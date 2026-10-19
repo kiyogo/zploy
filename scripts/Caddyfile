@@ -1,0 +1,30 @@
+# Caddyfile Reverse Proxy for Zploy with Automatic HTTPS
+# Replace yourdomain.com with your actual domain name.
+
+yourdomain.com {
+    # Automatic TLS certificate via Let's Encrypt / ZeroSSL
+    encode zstd gzip
+
+    # Proxy all traffic to Zploy Rust server running on port 3000
+    reverse_proxy 127.0.0.1:3000 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    # Access logging
+    log {
+        output file /var/log/caddy/zploy_access.log {
+            roll_size 50mb
+            roll_keep 5
+        }
+    }
+}

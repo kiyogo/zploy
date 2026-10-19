@@ -1,0 +1,23 @@
+[Unit]
+Description=Zploy - Static Web Hosting Server
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/zploy
+ExecStart=/var/www/zploy/zploy
+Restart=always
+RestartSec=5
+Environment=RUST_LOG=info
+Environment=ZPLOY_CONFIG=/var/www/zploy/config/config.toml
+LimitNOFILE=65535
+
+# Security sandbox
+ProtectSystem=full
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
