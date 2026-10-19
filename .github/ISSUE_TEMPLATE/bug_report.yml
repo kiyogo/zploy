@@ -1,0 +1,54 @@
+name: Bug Report
+description: File a bug report to help improve Zploy
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report an issue!
+  - type: input
+    id: version
+    attributes:
+      label: Zploy Version
+      description: What version of Zploy are you running? (e.g. v0.1.0 or git commit)
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Linux (Ubuntu/Debian)
+        - Linux (Alpine/Docker)
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Windows 10/11
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce the behavior?
+      placeholder: |
+        1. Go to '/admin'
+        2. Upload ZIP file containing ...
+        3. See error ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true

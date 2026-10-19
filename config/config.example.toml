@@ -19,11 +19,12 @@ max_uncompressed_size_mb = 250
 max_file_count = 5000
 max_single_file_size_mb = 50
 allowed_extensions = [
-    "html", "htm", "css", "js", "mjs", "json",
-    "svg", "png", "jpg", "jpeg", "webp", "gif", "ico",
+    "html", "htm", "css", "js", "mjs", "cjs", "json",
+    "svg", "png", "jpg", "jpeg", "webp", "avif", "apng", "gif", "ico", "bmp", "tiff",
     "woff", "woff2", "ttf", "eot", "otf",
     "txt", "xml", "webmanifest", "wasm",
-    "mp3", "mp4", "webm", "ogg", "wav", "pdf", "map"
+    "mp3", "mp4", "webm", "ogg", "wav", "flac", "pdf", "map",
+    "md", "markdown", "yaml", "yml", "toml", "csv", "tsv", "cname", "license"
 ]
 
 [auth]

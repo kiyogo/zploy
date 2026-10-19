@@ -181,3 +181,36 @@ fn test_zip_single_root_folder_flattening() {
     assert!(target_extract_dir.join("index.html").is_file());
     assert!(target_extract_dir.join("css/style.css").is_file());
 }
+
+#[test]
+fn test_markdown_and_docs_support() {
+    let dir = tempdir().unwrap();
+    let zip_path = dir.path().join("repo_with_docs.zip");
+    let target_extract_dir = dir.path().join("extracted_docs");
+    std::fs::create_dir_all(&target_extract_dir).unwrap();
+
+    {
+        let file = File::create(&zip_path).unwrap();
+        let mut zip = ZipWriter::new(file);
+        let options = SimpleFileOptions::default();
+
+        zip.start_file("index.html", options).unwrap();
+        zip.write_all(b"<h1>Docs Site</h1>").unwrap();
+
+        zip.start_file("CODE_OF_CONDUCT.md", options).unwrap();
+        zip.write_all(b"# Code of Conduct").unwrap();
+
+        zip.start_file("config.yaml", options).unwrap();
+        zip.write_all(b"title: Demo").unwrap();
+
+        zip.finish().unwrap();
+    }
+
+    let config = UploadConfig::default(); // Uses expanded allowed_extensions with md, yaml, etc.
+
+    let result = safe_extract_zip(&zip_path, &target_extract_dir, &config).unwrap();
+    assert_eq!(result.file_count, 3);
+    assert_eq!(result.has_index_html, true);
+    assert!(target_extract_dir.join("CODE_OF_CONDUCT.md").is_file());
+    assert!(target_extract_dir.join("config.yaml").is_file());
+}

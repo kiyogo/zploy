@@ -57,6 +57,28 @@ pub struct SecurityConfig {
     pub enable_spa_fallback: bool,
 }
 
+impl Default for UploadConfig {
+    fn default() -> Self {
+        Self {
+            max_upload_size_mb: 100,
+            max_uncompressed_size_mb: 250,
+            max_file_count: 5000,
+            max_single_file_size_mb: 50,
+            allowed_extensions: vec![
+                "html", "htm", "css", "js", "mjs", "cjs", "json",
+                "svg", "png", "jpg", "jpeg", "webp", "avif", "apng", "gif", "ico", "bmp", "tiff",
+                "woff", "woff2", "ttf", "eot", "otf",
+                "txt", "xml", "webmanifest", "wasm",
+                "mp3", "mp4", "webm", "ogg", "wav", "flac", "pdf", "map",
+                "md", "markdown", "yaml", "yml", "toml", "csv", "tsv", "cname", "license",
+            ]
+            .into_iter()
+            .map(String::from)
+            .collect(),
+        }
+    }
+}
+
 impl Default for Config {
     fn default() -> Self {
         Self {
@@ -75,22 +97,7 @@ impl Default for Config {
                 staging_dir: PathBuf::from("./storage/staging"),
                 temp_dir: PathBuf::from("./storage/temp"),
             },
-            upload: UploadConfig {
-                max_upload_size_mb: 100,
-                max_uncompressed_size_mb: 250,
-                max_file_count: 5000,
-                max_single_file_size_mb: 50,
-                allowed_extensions: vec![
-                    "html", "htm", "css", "js", "mjs", "json",
-                    "svg", "png", "jpg", "jpeg", "webp", "gif", "ico",
-                    "woff", "woff2", "ttf", "eot", "otf",
-                    "txt", "xml", "webmanifest", "wasm",
-                    "mp3", "mp4", "webm", "ogg", "wav", "pdf", "map",
-                ]
-                .into_iter()
-                .map(String::from)
-                .collect(),
-            },
+            upload: UploadConfig::default(),
             auth: AuthConfig {
                 session_expiry_hours: 72,
                 cookie_secure: false,

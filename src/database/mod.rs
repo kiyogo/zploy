@@ -26,7 +26,10 @@ pub async fn init_db(config: &Config) -> Result<DbPool> {
     // Run embedded migrations
     if let Err(e) = sqlx::migrate!("./migrations").run(&pool).await {
         let err_str = e.to_string();
-        if !err_str.contains("Duplicate entry") && !err_str.contains("already exists") {
+        if !err_str.contains("Duplicate entry")
+            && !err_str.contains("already exists")
+            && !err_str.contains("has been modified")
+        {
             return Err(e).context("Error running MySQL database migrations");
         }
     }

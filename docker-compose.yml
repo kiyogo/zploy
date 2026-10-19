@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  zploy:
+    build: .
+    container_name: zploy-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mysql://zploy:zploy_secret@db:3306/zploy
+      - ZPLOY_PORT=3000
+      - ZPLOY_HOST=0.0.0.0
+      - ZPLOY_BASE_URL=http://localhost:3000
+    volumes:
+      - ./storage:/app/storage
+      - ./config:/app/config
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:10.11
+    container_name: zploy-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret_password
+      MYSQL_DATABASE: zploy
+      MYSQL_USER: zploy
+      MYSQL_PASSWORD: zploy_secret
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:
