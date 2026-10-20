@@ -1,48 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="100%" height="100%" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="100%" height="100%" fill="none">
   <defs>
-    <!-- Accent Gradient 1 (Cyan to Blue) -->
-    <linearGradient id="cyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="zpCyan" x1="0%" y1="0%" x2="56" y2="56" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#38bdf8"/>
       <stop offset="100%" stop-color="#2563eb"/>
     </linearGradient>
-
-    <!-- Accent Gradient 2 (Electric Violet to Indigo) -->
-    <linearGradient id="violetIndigo" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="zpLightning" x1="0%" y1="0%" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="zpViolet" x1="0%" y1="0%" x2="56" y2="56" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#a855f7"/>
       <stop offset="100%" stop-color="#6366f1"/>
     </linearGradient>
-
-    <!-- Glow Gradient -->
-    <linearGradient id="lightningGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00f2fe"/>
-      <stop offset="50%" stop-color="#4facfe"/>
-      <stop offset="100%" stop-color="#7f00ff"/>
-    </linearGradient>
-
-    <!-- Drop Shadow Filter -->
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="6" result="blur" />
+    <filter id="zpGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
 
-  <!-- Ambient Glow Behind Logo -->
-  <circle cx="110" cy="110" r="70" fill="url(#cyanBlue)" opacity="0.12" />
-  <circle cx="130" cy="90" r="50" fill="url(#violetIndigo)" opacity="0.15" />
-
-  <!-- ICON: Geometric Isometric 'Z' Deployment Emblem (Pure vector, zero background box) -->
-  <g transform="translate(40, 20)">
-    <!-- Base Layer Polygon -->
-    <path d="M 30,30 L 110,30 L 130,58 L 58,130 L 130,130 L 120,154 L 30,154 L 10,126 L 82,54 L 20,54 Z"
-          fill="url(#violetIndigo)" opacity="0.35" filter="url(#glow)"/>
-
-    <!-- Upper Arm of Z -->
-    <path d="M 32,32 L 122,32 L 106,62 L 56,62 Z" fill="url(#cyanBlue)" />
-
-    <!-- Diagonal Lightning Spine of Z -->
-    <path d="M 122,32 L 40,148 L 74,148 L 140,54 L 106,62 Z" fill="url(#lightningGrad)" />
-
-    <!-- Lower Arm of Z -->
-    <path d="M 40,148 L 130,148 L 114,118 L 64,118 Z" fill="url(#violetIndigo)" />
+  <!-- Isometric 'Z' Deployment Symbol - Crisp transparent vector with zero background box -->
+  <g transform="translate(4, 2) scale(0.85)" filter="url(#zpGlow)">
+    <!-- Shadow Layer -->
+    <path d="M 12,8 L 44,8 L 50,18 L 22,44 L 50,44 L 46,52 L 12,52 L 6,42 L 32,16 L 8,16 Z"
+          fill="url(#zpViolet)" opacity="0.25"/>
+    <!-- Top arm -->
+    <path d="M 12,8 L 48,8 L 42,18 L 20,18 Z" fill="url(#zpCyan)"/>
+    <!-- Diagonal spine -->
+    <path d="M 48,8 L 16,48 L 28,48 L 54,16 L 42,18 Z" fill="url(#zpLightning)"/>
+    <!-- Bottom arm -->
+    <path d="M 16,48 L 50,48 L 44,38 L 24,38 Z" fill="url(#zpViolet)"/>
   </g>
 </svg>
